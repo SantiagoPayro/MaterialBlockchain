@@ -1,0 +1,150 @@
+
+<html>
+    <body>
+        <div>
+            <input type="text" id="amount">
+            <p id='balance'></p>
+            <button id="deposit">Deposit</button>
+            <button id="withdraw">Withdraw</button>
+        </div>
+		
+		<!--Jquery nos va a ayudar a realizar operaciones sobre los botones-->
+		<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+		<!--Web3 es una librería de javascript que sirve para conectar la aplicación con el blockchain de ethereum-->
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+    
+    
+        <script>
+			var contract;
+			var account;
+            $(document).ready(function()
+            {
+				web3 = new Web3(web3.currentProvider); 
+                var address = "0x384b3E20122a0380206CD3D1aDb3B7376B4A36cd";
+				//El codigo abi es una interfaz entre el bytecode y el codigo de javascript 
+				//que sirve para interactuar con el bytecode y así llamar funciones.
+                var abi =[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "int256",
+				"name": "amt",
+				"type": "int256"
+			}
+		],
+		"name": "deposit",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "int256",
+				"name": "amt",
+				"type": "int256"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getBalance1",
+		"outputs": [
+			{
+				"internalType": "int256",
+				"name": "",
+				"type": "int256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getBalance2",
+		"outputs": [
+			{
+				"internalType": "int256",
+				"name": "valor",
+				"type": "int256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+    
+                contract = new web3.eth.Contract(abi, address);
+
+                contract.methods.getBalance1().call().then(function(bal)
+                {
+                    $('#balance').html(bal);
+                })
+				
+	
+            })
+
+            $('#deposit').click(function()
+            {
+				//
+				var amt=0;
+				amt = parseInt($('#amount').val());
+				//Le estamos pasando como parámetro en then(), una función que de igual manera, recibe
+				//un arreglo que obtuvo cuando emitió la promesa. Es decir este es el resultado que obtuvo.
+				web3.eth.getAccounts().then(function(accounts)
+				{
+					//Le estamos pasando el valor de nuestra cuenta de metamask para que de ahí tome
+					//el gas fee
+					var acc = accounts[0];
+					//Aquí ejecutará la función deposit con el monto que le dimos y tomará el fee de la variable
+					//acc
+					return contract.methods.deposit(amt).send({from: acc});
+				}).then(function(tx)
+				{
+					console.log(tx);
+				}).catch(function(tx)
+				{
+					console.log(tx);
+				})
+			}) 
+			
+			
+			$('#withdraw').click(function()
+            {
+                var amt=0;
+				amt = parseInt($('#amount').val());
+				
+				web3.eth.getAccounts().then(function(accounts)
+				{
+					var acc = accounts[0];
+					return contract.methods.withdraw(amt).send({from: acc});
+				}).then(function(tx)
+				{
+					console.log(tx);
+				}).catch(function(tx)
+				{
+					console.log(tx);
+				})
+				
+            })
+        </script>
+    </body>
+</html>	
