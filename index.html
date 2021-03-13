@@ -12,7 +12,18 @@
 		<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 		<!--Web3 es una librería de javascript que sirve para conectar la aplicación con el blockchain de ethereum-->
 		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
-    
+        
+	    <!--Una promesa es un objeto que representa un valor que puede que esté disponible «ahora», 
+		en un «futuro» o que «nunca» lo esté. Como no se sabe cuándo va a estar disponible, todas 
+		las operaciones dependientes de ese valor, tendrán que posponerse en el tiempo.
+	Existen tres estados posibles para una promesa y estos son:
+		Pendiente. De base todas las promesas están pendientes.
+		Resuelta. Estará resuelta en el momento que llamemos a resolve y a continuación se ejecuta 
+		la función que pasamos al método .then. Debemos de tener en cuenta que una vez resuelta no 
+		podremos modificar el valor de la promesa, aunque si podríamos correr la misma instrucción 
+		para obtener un valor distinto y hacerlo las veces que deseemos.
+		Rechazada. Pasará a estar rechazada cuando llamemos a reject y obtengamos un error que nos 
+		indicará ese rechazo, pasando a continuación a ejecutar la función que pasamos a .catch.-->
     
         <script>
 			var contract;
