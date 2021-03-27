@@ -104,7 +104,7 @@
 ];
     
                 contract = new web3.eth.Contract(abi, address);
-
+		//Modificar este método getBalance1() al nombre que tengan en su remix
                 contract.methods.getBalance1().call().then(function(bal)
                 {
                     $('#balance').html(bal);
@@ -142,7 +142,8 @@
             {
                 var amt=0;
 				amt = parseInt($('#amount').val());
-				
+				//Cambiar el método .getAccounts() a .retrieveAccounts() porque la nueva versión de Metamask requiere que se autorice el permiso
+				//para pasar la cuenta personal.
 				web3.eth.getAccounts().then(function(accounts)
 				{
 					var acc = accounts[0];
