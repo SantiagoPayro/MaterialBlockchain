@@ -16,6 +16,8 @@ contract  Sample {
     
     function depositMoney() public payable{
         balance += msg.value;
+        //block.timestamp es un dato que guarda cada bloque como un número de serie único y cuya función es determinar el momento exacto
+        //en el que el bloque ha sido minado y validado por la red blockchain.
         lockedUntil= block.timestamp + 1 minutes;
     }
     
