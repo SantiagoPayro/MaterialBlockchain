@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <!--Jquery nos va a ayudar a realizar operaciones sobre los botones-->
+		<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+		<!--Web3 es una librería de javascript que sirve para conectar la aplicación con el blockchain de ethereum-->
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+    
+        <script src="https://unpkg.com/read-excel-file@4.x/bundle/read-excel-file.min.js"></script>
+    </head>
+    <body>
+        <div>
+            <input type="file" id="input">
+           
+        </div>
+
+        <div>
+            <input type="text" id="tbCurso">
+            <button id="btBuscar">Buscar dirección</button>
+            <p id="txDir"></p>
+        </div>
+       
+        
+        <script>
+            var contract;
+            $(document).ready(function()
+            {
+				web3 = new Web3(web3.currentProvider); 
+                var address = "0x396949d699139ae394f75266EEd6583771F0B575";
+				//El codigo abi es una interfaz entre el bytecode y el codigo de javascript 
+				//que sirve para interactuar con el bytecode y así llamar funciones.
+                var abi =[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_clave",
+				"type": "string"
+			}
+		],
+		"name": "crearCurso",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "string[]",
+				"name": "_claves",
+				"type": "string[]"
+			}
+		],
+		"name": "crearCursos",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_clave",
+				"type": "string"
+			}
+		],
+		"name": "buscarDireccion",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_clave",
+				"type": "string"
+			}
+		],
+		"name": "existeContrato",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+    
+                contract = new web3.eth.Contract(abi, address);
+            });
+            
+            var input = document.getElementById('input');
+            input.addEventListener('change', function(){
+
+                Promise.all([web3.eth.requestAccounts(),readXlsxFile(input.files[0])]).then(function(values) {
+                    var acc =values[0][0];
+                    var data = values[1];
+                    const arregloClave = [];
+                    var i =0;
+                    while(i<data.length) {
+                        arregloClave[i]= data[i][0];
+                        i++;
+                    }
+                    
+                    return contract.methods.crearCursos(arregloClave).send({from: acc});
+                }).then(function(tx) {
+                    console.log(tx);
+                }).catch(function(tx) {
+                    console.log(tx);
+                });
+                
+
+            });
+
+            $('#btBuscar').click(function() {
+                var text = $('#tbCurso').val();
+                contract.methods.buscarDireccion(text).call().then(function(data) {
+                    var x = document.getElementById("txDir");
+                    x.innerHTML = data;
+                }).catch(function(tx) {
+                    console.log(tx);
+                });
+            })
+        </script>
+    </body>
+</html>
