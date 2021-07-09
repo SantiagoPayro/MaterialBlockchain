@@ -120,7 +120,9 @@
 				amt = parseInt($('#amount').val());
 				//Le estamos pasando como parámetro en then(), una función que de igual manera, recibe
 				//un arreglo que obtuvo cuando emitió la promesa. Es decir este es el resultado que obtuvo.
-				web3.eth.getAccounts().then(function(accounts)
+		    		//Cambié el método .getAccounts() a .requestAccounts() porque la nueva versión de Metamask requiere que se autorice el permiso
+				//para pasar la cuenta personal.
+				web3.eth.requestAccounts().then(function(accounts)
 				{
 					//Le estamos pasando el valor de nuestra cuenta de metamask para que de ahí tome
 					//el gas fee
@@ -142,9 +144,9 @@
             {
                 var amt=0;
 				amt = parseInt($('#amount').val());
-				//Cambiar el método .getAccounts() a .retrieveAccounts() porque la nueva versión de Metamask requiere que se autorice el permiso
+				//Cambié el método .getAccounts() a .requestAccounts() porque la nueva versión de Metamask requiere que se autorice el permiso
 				//para pasar la cuenta personal.
-				web3.eth.getAccounts().then(function(accounts)
+				web3.eth.requestAccounts().then(function(accounts)
 				{
 					var acc = accounts[0];
 					return contract.methods.withdraw(amt).send({from: acc});
